@@ -20,6 +20,15 @@ To deploy this project to Railway, follow these steps:
 
 6. Once deployed, Railway will provide you with a URL for your application.
 
+## Clerk Setup
+
+1. Sign up for a Clerk account at [https://clerk.com/](https://clerk.com/)
+2. Create a new application in the Clerk dashboard
+3. In your application settings, add the following to your "Allowed Origins":
+   - `http://localhost:3000`
+   - Your Railway deployment URL (once you have it)
+4. Copy your Clerk Publishable Key and Secret Key from the Clerk dashboard
+
 ## Local Development
 
 To run this project locally:
