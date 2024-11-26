@@ -1,6 +1,13 @@
 # MechHub Public Site
 
-This is the public site for MechHub, built with Next.js and Clerk for authentication.
+This is the public site for MechHub, built with Next.js and custom authentication using Clerk's API.
+
+## Features
+
+- Custom sign-up and sign-in pages
+- Integration with Clerk's authentication API
+- Responsive design using Tailwind CSS
+- Accessible UI components from shadcn/ui
 
 ## Deployment to Railway
 
