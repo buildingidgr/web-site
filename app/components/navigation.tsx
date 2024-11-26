@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-import { Button } from '../ui/button'
+import { Button } from './ui/button'
 
 export default function Navigation() {
   return (
