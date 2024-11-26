@@ -19,7 +19,7 @@ export default function Navigation() {
               <Link href="/sign-up" passHref>
                 <Button variant="ghost">Sign Up</Button>
               </Link>
-              <Link href="/sign-in" passHref>
+              <Link href="/signin" passHref>
                 <Button variant="ghost">Sign In</Button>
               </Link>
             </SignedOut>
