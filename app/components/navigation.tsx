@@ -16,7 +16,7 @@ export default function Navigation() {
           </div>
           <div className="flex items-center">
             <SignedOut>
-              <Link href="/sign-up" passHref>
+              <Link href="/signup" passHref>
                 <Button variant="ghost">Sign Up</Button>
               </Link>
               <Link href="/signin" passHref>
