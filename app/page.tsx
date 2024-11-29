@@ -1,4 +1,6 @@
 import Navigation from './components/navigation'
+import Profile from './components/Profile'
+import { SignedIn } from '@clerk/nextjs'
 
 export default function Home() {
   return (
@@ -8,6 +10,12 @@ export default function Home() {
         <div className="px-4 py-6 sm:px-0">
           <h1 className="text-3xl font-bold text-gray-900">Welcome to MechHub</h1>
           <p className="mt-2 text-gray-600">Your one-stop platform for all things mechanical engineering.</p>
+          
+          <SignedIn>
+            <div className="mt-6">
+              <Profile />
+            </div>
+          </SignedIn>
         </div>
       </main>
     </div>
