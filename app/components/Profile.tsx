@@ -3,6 +3,7 @@
 import { useAuth } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import { Profile } from '../types/profile';
+import { exchangeClerkSessionForTokens } from '../utils/auth';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -15,16 +16,18 @@ export default function Profile() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const token = await getToken();
-        if (!token) {
-          setError('No authentication token available');
+        // First exchange Clerk token for API token
+        const apiTokens = await exchangeClerkSessionForTokens();
+        
+        if (!apiTokens?.access_token) {
+          setError('No API token available');
           setLoading(false);
           return;
         }
 
         const response = await fetch(`${API_URL}/api/profiles/me`, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${apiTokens.access_token}`,
           }
         });
 
@@ -42,7 +45,7 @@ export default function Profile() {
     }
 
     fetchProfile();
-  }, [getToken]);
+  }, []);
 
   if (loading) {
     return (
