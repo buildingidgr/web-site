@@ -5,19 +5,27 @@ import { useEffect } from 'react';
 import { exchangeClerkSessionForTokens } from '../utils/auth';
 
 export default function AuthHandler() {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, getToken } = useAuth();
 
   useEffect(() => {
-    if (isSignedIn) {
-      exchangeClerkSessionForTokens()
-        .then(tokens => {
+    async function handleTokenExchange() {
+      if (isSignedIn) {
+        try {
+          const clerkToken = await getToken();
+          if (!clerkToken) {
+            throw new Error('No Clerk token available');
+          }
+          
+          const tokens = await exchangeClerkSessionForTokens(clerkToken);
           console.log('Token exchange successful');
-        })
-        .catch(error => {
+        } catch (error) {
           console.error('Token exchange failed:', error);
-        });
+        }
+      }
     }
-  }, [isSignedIn]);
+
+    handleTokenExchange();
+  }, [isSignedIn, getToken]);
 
   return null;
 } 
