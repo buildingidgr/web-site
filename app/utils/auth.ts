@@ -1,13 +1,15 @@
 'use client';
 
-const AUTH_API_URL = `https://${process.env.NEXT_PUBLIC_AUTH_SERVICE_INTERNAL}`;
+const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_SERVICE_INTERNAL 
+  ? `https://${process.env.NEXT_PUBLIC_AUTH_SERVICE_INTERNAL}`
+  : '';
 
 export async function exchangeClerkSessionForTokens(token: string) {
     console.log('Auth: Starting token exchange');
     
-    if (!token) {
-      console.error('Auth: No active session');
-      throw new Error('No active session');
+    if (!AUTH_API_URL) {
+      console.error('Auth: AUTH_API_URL is not configured');
+      throw new Error('Auth service URL is not configured');
     }
   
     console.log('Auth: Making exchange request to:', AUTH_API_URL);

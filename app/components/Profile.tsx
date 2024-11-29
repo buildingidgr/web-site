@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 import { Profile as ProfileType } from '../types/profile';
 import { exchangeClerkSessionForTokens } from '../utils/auth';
 
-const PROFILE_API_URL = `https://${process.env.NEXT_PUBLIC_PROFILE_SERVICE_INTERNAL}`;
+const PROFILE_API_URL = process.env.NEXT_PUBLIC_PROFILE_SERVICE_INTERNAL 
+  ? `https://${process.env.NEXT_PUBLIC_PROFILE_SERVICE_INTERNAL}`
+  : '';
 
 export default function ProfileComponent() {
   console.log('ProfileComponent: Component mounted');
@@ -18,6 +20,13 @@ export default function ProfileComponent() {
 
   useEffect(() => {
     console.log('ProfileComponent: useEffect triggered');
+    
+    if (!PROFILE_API_URL) {
+      console.error('ProfileComponent: PROFILE_API_URL is not configured');
+      setError('Profile service URL is not configured');
+      setLoading(false);
+      return;
+    }
     
     async function fetchProfile() {
       console.log('ProfileComponent: Starting fetchProfile');
