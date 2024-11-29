@@ -22,9 +22,26 @@ import {
   User,
   Users,
 } from "lucide-react";
+import { LucideIcon } from 'lucide-react';
 import React from "react";
 
-const menuItems = [
+interface MenuItemGroup {
+  icon: LucideIcon;
+  label: string;
+  shortcut?: string;
+  hasSubmenu?: boolean;
+  disabled?: boolean;
+}
+
+interface MenuItem {
+  label?: string;
+  type?: 'label' | 'single';
+  icon?: LucideIcon;
+  shortcut?: string;
+  group?: MenuItemGroup[];
+}
+
+const menuItems: MenuItem[] = [
   {
     label: "My Account",
     type: "label",
