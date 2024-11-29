@@ -103,7 +103,7 @@ export default function Profile() {
             </div>
           </div>
         </div>
-
+        <div className="space-y-4">
         <div>
           <h3 className="font-semibold text-lg mb-2">Email Notifications</h3>
           <div className="grid grid-cols-2 gap-2">
