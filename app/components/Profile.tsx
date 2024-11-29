@@ -22,8 +22,15 @@ export default function ProfileComponent() {
     async function fetchProfile() {
       console.log('ProfileComponent: Starting fetchProfile');
       try {
+        console.log('ProfileComponent: Getting Clerk token');
+        const clerkToken = await getToken();
+        
+        if (!clerkToken) {
+          throw new Error('No Clerk token available');
+        }
+
         console.log('ProfileComponent: Exchanging tokens');
-        const apiTokens = await exchangeClerkSessionForTokens();
+        const apiTokens = await exchangeClerkSessionForTokens(clerkToken);
         console.log('ProfileComponent: Tokens received:', !!apiTokens);
         
         if (!apiTokens?.access_token) {

@@ -1,15 +1,9 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
-
-export async function exchangeClerkSessionForTokens() {
+export async function exchangeClerkSessionForTokens(token: string) {
     console.log('Auth: Starting token exchange');
-    const { getToken } = useAuth();
-    const clerkToken = await getToken();
     
-    console.log('Auth: Clerk token obtained:', !!clerkToken);
-    
-    if (!clerkToken) {
+    if (!token) {
       console.error('Auth: No active session');
       throw new Error('No active session');
     }
@@ -21,7 +15,7 @@ export async function exchangeClerkSessionForTokens() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        token: clerkToken
+        token
       })
     });
   
