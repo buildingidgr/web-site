@@ -6,12 +6,12 @@ import { exchangeClerkSessionForTokens } from '../utils/auth';
 
 export default function AuthHandler() {
   const { isSignedIn, getToken } = useAuth();
-  const { session } = useSession();
-  const { user } = useUser();
+  const { session, isLoaded: isSessionLoaded } = useSession();
+  const { user, isLoaded: isUserLoaded } = useUser();
 
   useEffect(() => {
     async function handleTokenExchange() {
-      if (isSignedIn && session && user) {
+      if (isSignedIn && isSessionLoaded && isUserLoaded && session && user) {
         try {
           const clerkToken = await getToken();
           if (!clerkToken) {
@@ -31,7 +31,7 @@ export default function AuthHandler() {
     }
 
     handleTokenExchange();
-  }, [isSignedIn, getToken, session, user]);
+  }, [isSignedIn, getToken, session, user, isSessionLoaded, isUserLoaded]);
 
   return null;
 } 

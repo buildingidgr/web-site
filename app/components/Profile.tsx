@@ -4,6 +4,8 @@ import { useAuth } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import { Profile as ProfileType } from '../types/profile';
 import { exchangeClerkSessionForTokens } from '../utils/auth';
+import { useSession } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 
 const PROFILE_API_URL = process.env.NEXT_PUBLIC_PROFILE_API_URL;
 
@@ -12,6 +14,8 @@ export default function ProfileComponent() {
   console.log('ProfileComponent: API_URL:', PROFILE_API_URL);
 
   const { getToken } = useAuth();
+  const { session } = useSession();
+  const { user } = useUser();
   const [profile, setProfile] = useState<ProfileType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +41,11 @@ export default function ProfileComponent() {
         }
 
         console.log('ProfileComponent: Exchanging tokens');
-        const apiTokens = await exchangeClerkSessionForTokens(clerkToken);
+        const apiTokens = await exchangeClerkSessionForTokens(
+          clerkToken,
+          session.id,
+          user.id
+        );
         console.log('ProfileComponent: Tokens received:', !!apiTokens);
         
         if (!apiTokens?.access_token) {
