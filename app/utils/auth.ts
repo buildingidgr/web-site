@@ -14,8 +14,10 @@ export async function exchangeClerkSessionForTokens(token: string) {
     try {
       const response = await fetch(`${AUTH_API_URL}/api/auth/exchange`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
         },
         body: JSON.stringify({
           token

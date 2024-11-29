@@ -49,8 +49,10 @@ export default function ProfileComponent() {
 
         console.log('ProfileComponent: Fetching profile data');
         const response = await fetch(`${PROFILE_API_URL}/api/profiles/me`, {
+          credentials: 'include',
           headers: {
             'Authorization': `Bearer ${apiTokens.access_token}`,
+            'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
           }
         });
 

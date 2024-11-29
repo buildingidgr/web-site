@@ -2,9 +2,11 @@ import { authMiddleware } from "@clerk/nextjs";
 import { NextResponse } from 'next/server';
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEB_URL || '*',
+  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEB_URL,
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, Origin',
+  'Access-Control-Allow-Credentials': 'true',
+  'Access-Control-Max-Age': '86400',
 };
 
 export default authMiddleware({
@@ -21,9 +23,15 @@ export default authMiddleware({
   },
   afterAuth: (auth, req) => {
     const response = NextResponse.next();
-    Object.entries(corsHeaders).forEach(([key, value]) => {
-      response.headers.set(key, value);
-    });
+    
+    if (req.url.includes('/api/')) {
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        if (value) {
+          response.headers.set(key, value);
+        }
+      });
+    }
+    
     return response;
   }
 });
