@@ -1,4 +1,5 @@
 import { authMiddleware } from "@clerk/nextjs";
+import { NextResponse } from 'next/server';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEB_URL || '*',
@@ -12,16 +13,18 @@ export default authMiddleware({
   ignoredRoutes: ["/api/auth/exchange", "/api/auth/refresh"],
   beforeAuth: (req) => {
     if (req.method === 'OPTIONS') {
-      return new Response(null, { 
+      return NextResponse.json({}, { 
         status: 204, 
         headers: corsHeaders 
       });
     }
   },
-  afterAuth: (auth, req, evt) => {
-    evt.headers.set('Access-Control-Allow-Origin', corsHeaders['Access-Control-Allow-Origin']);
-    evt.headers.set('Access-Control-Allow-Methods', corsHeaders['Access-Control-Allow-Methods']);
-    evt.headers.set('Access-Control-Allow-Headers', corsHeaders['Access-Control-Allow-Headers']);
+  afterAuth: (auth, req) => {
+    const response = NextResponse.next();
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+    return response;
   }
 });
 
