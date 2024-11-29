@@ -8,23 +8,32 @@ import { exchangeClerkSessionForTokens } from '../utils/auth';
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function ProfileComponent() {
+  console.log('ProfileComponent: Component mounted');
+  console.log('ProfileComponent: API_URL:', API_URL);
+
   const { getToken } = useAuth();
   const [profile, setProfile] = useState<ProfileType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('ProfileComponent: useEffect triggered');
+    
     async function fetchProfile() {
+      console.log('ProfileComponent: Starting fetchProfile');
       try {
-        // First exchange Clerk token for API token
+        console.log('ProfileComponent: Exchanging tokens');
         const apiTokens = await exchangeClerkSessionForTokens();
+        console.log('ProfileComponent: Tokens received:', !!apiTokens);
         
         if (!apiTokens?.access_token) {
+          console.error('ProfileComponent: No access token available');
           setError('No API token available');
           setLoading(false);
           return;
         }
 
+        console.log('ProfileComponent: Fetching profile data');
         const response = await fetch(`${API_URL}/api/profiles/me`, {
           headers: {
             'Authorization': `Bearer ${apiTokens.access_token}`,
@@ -32,12 +41,15 @@ export default function ProfileComponent() {
         });
 
         if (!response.ok) {
+          console.error('ProfileComponent: API response not OK:', response.status);
           throw new Error('Failed to fetch profile');
         }
 
         const data = await response.json();
+        console.log('ProfileComponent: Profile data received');
         setProfile(data);
       } catch (err) {
+        console.error('ProfileComponent: Error:', err);
         setError(err instanceof Error ? err.message : 'Failed to load profile');
       } finally {
         setLoading(false);

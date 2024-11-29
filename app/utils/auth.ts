@@ -3,13 +3,18 @@
 import { useAuth } from '@clerk/nextjs';
 
 export async function exchangeClerkSessionForTokens() {
+    console.log('Auth: Starting token exchange');
     const { getToken } = useAuth();
     const clerkToken = await getToken();
     
+    console.log('Auth: Clerk token obtained:', !!clerkToken);
+    
     if (!clerkToken) {
+      console.error('Auth: No active session');
       throw new Error('No active session');
     }
   
+    console.log('Auth: Making exchange request to:', process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/exchange`, {
       method: 'POST',
       headers: {
@@ -21,9 +26,11 @@ export async function exchangeClerkSessionForTokens() {
     });
   
     if (!response.ok) {
+      console.error('Auth: Exchange failed with status:', response.status);
       throw new Error('Failed to exchange session');
     }
   
     const tokens = await response.json();
-    return tokens; // { access_token, refresh_token }
-  }
+    console.log('Auth: Token exchange successful');
+    return tokens;
+}
