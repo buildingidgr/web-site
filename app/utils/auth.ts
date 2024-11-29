@@ -1,9 +1,10 @@
+import { auth } from '@clerk/nextjs';
+
 export async function exchangeClerkSessionForTokens() {
-  const session = await fetch('/api/auth/session')
-  const sessionData = await session.json()
+  const { sessionId, userId } = auth();
   
-  if (!sessionData?.sessionId) {
-    throw new Error('No active session')
+  if (!sessionId || !userId) {
+    throw new Error('No active session');
   }
 
   const response = await fetch('/api/auth/exchange', {
@@ -12,16 +13,16 @@ export async function exchangeClerkSessionForTokens() {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      sessionId: sessionData.sessionId,
-      userId: sessionData.userId
+      sessionId,
+      userId
     })
-  })
+  });
 
   if (!response.ok) {
-    throw new Error('Failed to exchange session')
+    throw new Error('Failed to exchange session');
   }
 
-  return response.json()
+  return response.json();
 }
 
 export async function refreshTokens(refreshToken: string) {
