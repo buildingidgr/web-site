@@ -188,10 +188,14 @@ export default function ProfileComponent() {
       <div className="space-y-4">
         <div>
           <h3 className="font-semibold text-lg mb-2">Preferences</h3>
-          <PreferencesForm 
-            preferences={profile.preferences} 
-            onUpdate={handleUpdatePreferences}
-          />
+          {profile && (
+            <div className="mt-6">
+              <PreferencesForm 
+                preferences={profile.preferences} 
+                onUpdate={handleUpdatePreferences} 
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
