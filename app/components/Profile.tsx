@@ -2,14 +2,14 @@
 
 import { useAuth } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
-import { Profile } from '../types/profile';
+import { Profile as ProfileType } from '../types/profile';
 import { exchangeClerkSessionForTokens } from '../utils/auth';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function Profile() {
+export default function ProfileComponent() {
   const { getToken } = useAuth();
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<ProfileType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

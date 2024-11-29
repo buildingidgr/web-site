@@ -1,5 +1,5 @@
 import Navigation from './components/navigation'
-import Profile from './components/Profile'
+import ProfileComponent from './components/Profile'
 import { SignedIn } from '@clerk/nextjs'
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
           
           <SignedIn>
             <div className="mt-6">
-              <Profile />
+              <ProfileComponent />
             </div>
           </SignedIn>
         </div>
