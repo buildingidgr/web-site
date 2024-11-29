@@ -1,6 +1,6 @@
 'use client';
 
-const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL;
+const AUTH_API_URL = `https://${process.env.NEXT_PUBLIC_AUTH_SERVICE_INTERNAL}`;
 
 export async function exchangeClerkSessionForTokens(token: string) {
     console.log('Auth: Starting token exchange');

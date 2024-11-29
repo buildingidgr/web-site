@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Profile as ProfileType } from '../types/profile';
 import { exchangeClerkSessionForTokens } from '../utils/auth';
 
-const PROFILE_API_URL = process.env.NEXT_PUBLIC_PROFILE_API_URL;
+const PROFILE_API_URL = `https://${process.env.NEXT_PUBLIC_PROFILE_SERVICE_INTERNAL}`;
 
 export default function ProfileComponent() {
   console.log('ProfileComponent: Component mounted');
