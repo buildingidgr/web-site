@@ -14,11 +14,8 @@ export async function exchangeClerkSessionForTokens() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-      'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_API_URL,
-      'Access-Control-Allow-Credentials': 'true'
-    },
-    credentials: 'include'
+      'Authorization': `Bearer ${token}`
+    }
   });
 
   if (!response.ok) {
