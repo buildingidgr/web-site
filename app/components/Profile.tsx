@@ -6,7 +6,7 @@ import { Profile as ProfileType } from '../types/profile';
 import { exchangeClerkSessionForTokens } from '../utils/auth';
 import { useSession } from '@clerk/nextjs';
 import { useUser } from '@clerk/nextjs';
-import { DropdownMenuDemo } from './DropdownMenuDemo';
+import ProfileDropdown from './ProfileDropdown';
 
 const PROFILE_API_URL = process.env.NEXT_PUBLIC_PROFILE_API_URL;
 
@@ -132,7 +132,7 @@ export default function ProfileComponent() {
             <p className="text-gray-600">{profile.email}</p>
           </div>
         </div>
-        <DropdownMenuDemo />
+        <ProfileDropdown />
       </div>
 
       <div className="space-y-4">
