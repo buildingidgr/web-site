@@ -118,7 +118,6 @@ export default function ProfileComponent() {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${apiTokens.access_token}`,
-          'X-Clerk-Token': clerkToken,
           'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
         },
         credentials: 'include',
