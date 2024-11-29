@@ -89,12 +89,11 @@ export default function ProfileComponent() {
       let accessToken = tokenManager.getAccessToken();
       
       if (!accessToken) {
-        // Token is missing or expired, get a new one
         const clerkToken = await getToken();
         if (!clerkToken) {
           throw new Error('No Clerk token available');
         }
-
+  
         const tokens = await exchangeClerkSessionForTokens(
           clerkToken,
           session?.id,
@@ -103,17 +102,18 @@ export default function ProfileComponent() {
         tokenManager.setTokens(tokens);
         accessToken = tokens.access_token;
       }
-
+  
       const response = await fetch(`${PROFILE_API_URL}/api/profiles/me/preferences`, {
         method: 'PATCH',
         credentials: 'include',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
+          'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
         },
         body: JSON.stringify(updatedPreferences),
       });
-
+  
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Update preferences failed:', {
@@ -123,7 +123,7 @@ export default function ProfileComponent() {
         });
         throw new Error(`Failed to update preferences: ${errorText}`);
       }
-
+  
       const updatedProfile = await response.json();
       console.log('Preferences updated successfully:', updatedProfile);
       setProfile(prev => prev ? { ...prev, preferences: updatedProfile } : null);
