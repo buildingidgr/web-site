@@ -1,7 +1,7 @@
 import { ClerkProvider } from '@clerk/nextjs'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { exchangeClerkSessionForTokens } from './utils/auth'
+import AuthHandler from './components/AuthHandler'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -10,26 +10,18 @@ export const metadata = {
   description: 'Your Mechanical Engineering Hub',
 }
 
-async function handleTokenExchange() {
-  try {
-    const tokens = await exchangeClerkSessionForTokens()
-    return tokens
-  } catch (error) {
-    console.error('Token exchange failed:', error)
-  }
-}
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider
-      afterSignIn={handleTokenExchange}
-    >
+    <ClerkProvider>
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <AuthHandler />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   )

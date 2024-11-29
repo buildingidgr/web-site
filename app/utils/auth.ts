@@ -1,9 +1,12 @@
-import { auth } from '@clerk/nextjs';
+'use client';
+
+import { useAuth } from '@clerk/nextjs';
 
 export async function exchangeClerkSessionForTokens() {
-  const { sessionId, userId } = auth();
+  const { getToken } = useAuth();
+  const token = await getToken();
   
-  if (!sessionId || !userId) {
+  if (!token) {
     throw new Error('No active session');
   }
 
@@ -11,11 +14,8 @@ export async function exchangeClerkSessionForTokens() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      sessionId,
-      userId
-    })
+      'Authorization': `Bearer ${token}`
+    }
   });
 
   if (!response.ok) {
