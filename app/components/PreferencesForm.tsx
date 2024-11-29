@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ProfilePreferences } from '../types/profile';
+import { Button } from '../ui/button';
 
 interface PreferencesFormProps {
   preferences: ProfilePreferences;
@@ -36,42 +37,13 @@ export default function PreferencesForm({ preferences, onUpdate }: PreferencesFo
 
   if (!isEditing) {
     return (
-      <div className="space-y-6">
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h4 className="font-medium">Current Preferences</h4>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="text-blue-600 hover:text-blue-800"
-            >
-              Edit Preferences
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <h5 className="font-medium">Dashboard Settings</h5>
-              <p>Timezone: {preferences.dashboard.timezone}</p>
-              <p>Language: {preferences.dashboard.language}</p>
-            </div>
-
-            <div>
-              <h5 className="font-medium">Email Notifications</h5>
-              <ul className="list-disc pl-5">
-                <li>Marketing: {preferences.notifications.email.marketing ? 'Yes' : 'No'}</li>
-                <li>Updates: {preferences.notifications.email.updates ? 'Yes' : 'No'}</li>
-                <li>Security: {preferences.notifications.email.security ? 'Yes' : 'No'}</li>
-                <li>Newsletters: {preferences.notifications.email.newsletters ? 'Yes' : 'No'}</li>
-                <li>Product Announcements: {preferences.notifications.email.productAnnouncements ? 'Yes' : 'No'}</li>
-              </ul>
-            </div>
-
-            <div>
-              <h5 className="font-medium">Display</h5>
-              <p>Theme: {preferences.display.theme}</p>
-            </div>
-          </div>
-        </div>
+      <div className="flex justify-end">
+        <Button
+          onClick={() => setIsEditing(true)}
+          className="text-blue-600 hover:text-blue-800"
+        >
+          Edit Preferences
+        </Button>
       </div>
     );
   }
@@ -155,19 +127,28 @@ export default function PreferencesForm({ preferences, onUpdate }: PreferencesFo
       </div>
 
       <div className="flex justify-end space-x-3">
-        <button
-          type="button"
+        <Button
           onClick={() => setIsEditing(false)}
           className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
         >
           Cancel
-        </button>
-        <button
-          type="submit"
+        </Button>
+        <Button
+          onClick={async () => {
+            const changedPreferences = Object.keys(formData).reduce((acc, key) => {
+              if (JSON.stringify(formData[key]) !== JSON.stringify(preferences[key])) {
+                acc[key] = formData[key];
+              }
+              return acc;
+            }, {} as Partial<ProfilePreferences>);
+
+            await onUpdate(changedPreferences);
+            setIsEditing(false);
+          }}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
         >
           Save Changes
-        </button>
+        </Button>
       </div>
     </form>
   );

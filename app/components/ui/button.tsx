@@ -1,30 +1,42 @@
-import * as React from "react"
-import { cn } from "../../lib/utils"
+"use client";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "outline"
-  size?: "default" | "sm"
+import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  onClick?: () => void;
+  className?: string;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "default", size = "default", ...props }, ref) => {
-    return (
-      <button
-        className={cn(
-          "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
-          variant === "default" && "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-          variant === "outline" && "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-          size === "default" && "h-9 px-4 py-2",
-          size === "sm" && "h-8 rounded-md px-3 text-xs",
-          className
-        )}
-        ref={ref}
-        {...props}
-      />
-    )
-  }
-)
-Button.displayName = "Button"
+export function Button({ children, onClick, className = "", ...props }: ButtonProps) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-export { Button } 
+  const handleClick = async () => {
+    if (onClick) {
+      setIsLoading(true);
+      try {
+        await onClick();
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={isLoading}
+      data-loading={isLoading}
+      className={`group relative disabled:opacity-100 inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${className}`}
+      {...props}
+    >
+      <span className="group-data-[loading=true]:text-transparent">{children}</span>
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <LoaderCircle className="animate-spin" size={16} strokeWidth={2} aria-hidden="true" />
+        </div>
+      )}
+    </button>
+  );
+} 
