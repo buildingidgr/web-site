@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react';
 import { Profile as ProfileType } from '../types/profile';
 import { exchangeClerkSessionForTokens } from '../utils/auth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const PROFILE_API_URL = process.env.NEXT_PUBLIC_PROFILE_API_URL;
 
 export default function ProfileComponent() {
   console.log('ProfileComponent: Component mounted');
-  console.log('ProfileComponent: API_URL:', API_URL);
+  console.log('ProfileComponent: API_URL:', PROFILE_API_URL);
 
   const { getToken } = useAuth();
   const [profile, setProfile] = useState<ProfileType | null>(null);
@@ -41,7 +41,7 @@ export default function ProfileComponent() {
         }
 
         console.log('ProfileComponent: Fetching profile data');
-        const response = await fetch(`${API_URL}/api/profiles/me`, {
+        const response = await fetch(`${PROFILE_API_URL}/api/profiles/me`, {
           headers: {
             'Authorization': `Bearer ${apiTokens.access_token}`,
           }
