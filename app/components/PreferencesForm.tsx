@@ -15,6 +15,16 @@ export default function PreferencesForm({ preferences, onUpdate }: PreferencesFo
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log('Submitting preferences update:', {
+        formData,
+        changes: Object.keys(formData).reduce((acc, key) => {
+          if (JSON.stringify(formData[key]) !== JSON.stringify(preferences[key])) {
+            acc[key] = formData[key];
+          }
+          return acc;
+        }, {} as Partial<ProfilePreferences>)
+      });
+
       await onUpdate(formData);
       setIsEditing(false);
     } catch (error) {

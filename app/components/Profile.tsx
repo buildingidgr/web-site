@@ -90,6 +90,7 @@ export default function ProfileComponent() {
         throw new Error('No Clerk token available');
       }
 
+      console.log('Starting preferences update...');
       const apiTokens = await exchangeClerkSessionForTokens(
         clerkToken,
         session?.id,
@@ -100,11 +101,24 @@ export default function ProfileComponent() {
         throw new Error('No API token available');
       }
 
+      // Log the request details (remove sensitive data in production)
+      console.log('Update preferences request:', {
+        url: `${PROFILE_API_URL}/api/profiles/me/preferences`,
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiTokens.access_token.substring(0, 10) + '...',
+          'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
+        },
+        body: updatedPreferences
+      });
+
       const response = await fetch(`${PROFILE_API_URL}/api/profiles/me/preferences`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${apiTokens.access_token}`,
+          'X-Clerk-Token': clerkToken,
           'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
         },
         credentials: 'include',
@@ -112,10 +126,19 @@ export default function ProfileComponent() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update preferences');
+        const errorText = await response.text();
+        console.error('Update preferences failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText,
+          requestUrl: `${PROFILE_API_URL}/api/profiles/me/preferences`,
+          requestBody: updatedPreferences
+        });
+        throw new Error(`Failed to update preferences: ${errorText}`);
       }
 
       const updatedProfile = await response.json();
+      console.log('Preferences updated successfully:', updatedProfile);
       setProfile(prev => prev ? { ...prev, preferences: updatedProfile } : null);
     } catch (error) {
       console.error('Failed to update preferences:', error);
