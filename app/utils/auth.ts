@@ -20,9 +20,9 @@ export async function exchangeClerkSessionForTokens(token: string, sessionId?: s
         headers: {
           'Content-Type': 'application/json',
           'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          token,
           sessionId,
           userId
         })
