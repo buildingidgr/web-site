@@ -10,8 +10,13 @@ export async function exchangeClerkSessionForTokens(token: string, sessionId?: s
       throw new Error('Auth service URL is not configured');
     }
   
+    if (!sessionId || !userId) {
+      throw new Error('Session ID and User ID are required');
+    }
+  
     const url = `${AUTH_API_URL}/v1/token/clerk/exchange`;
-    console.log('Auth: Making exchange request to:', url);
+    console.log('Auth: Full URL:', url);
+    console.log('Auth: Request body:', { sessionId, userId });
     
     try {
       const response = await fetch(url, {
@@ -20,7 +25,6 @@ export async function exchangeClerkSessionForTokens(token: string, sessionId?: s
         headers: {
           'Content-Type': 'application/json',
           'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           sessionId,
