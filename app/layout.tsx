@@ -1,8 +1,19 @@
 import { ClerkProvider } from '@clerk/nextjs'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { useEffect } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
+
+async function handleTokenExchange() {
+  try {
+    const tokens = await exchangeClerkSessionForTokens()
+    // Store tokens securely (e.g., in memory or secure cookie)
+    return tokens
+  } catch (error) {
+    console.error('Token exchange failed:', error)
+  }
+}
 
 export const metadata = {
   title: 'MechHub',
@@ -15,7 +26,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      afterSignIn={handleTokenExchange}
+    >
       <html lang="en">
         <body className={inter.className}>{children}</body>
       </html>
