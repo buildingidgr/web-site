@@ -6,6 +6,7 @@ import { Profile as ProfileType } from '../types/profile';
 import { exchangeClerkSessionForTokens } from '../utils/auth';
 import { useSession } from '@clerk/nextjs';
 import { useUser } from '@clerk/nextjs';
+import { DropdownMenuDemo } from './DropdownMenuDemo';
 
 const PROFILE_API_URL = process.env.NEXT_PUBLIC_PROFILE_API_URL;
 
@@ -115,20 +116,23 @@ export default function ProfileComponent() {
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
-      <div className="flex items-center space-x-4 mb-6">
-        {profile.avatarUrl && (
-          <img
-            src={profile.avatarUrl}
-            alt="Profile"
-            className="h-16 w-16 rounded-full"
-          />
-        )}
-        <div>
-          <h2 className="text-2xl font-bold">
-            {profile.firstName} {profile.lastName}
-          </h2>
-          <p className="text-gray-600">{profile.email}</p>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-4">
+          {profile.avatarUrl && (
+            <img
+              src={profile.avatarUrl}
+              alt="Profile"
+              className="h-16 w-16 rounded-full"
+            />
+          )}
+          <div>
+            <h2 className="text-2xl font-bold">
+              {profile.firstName} {profile.lastName}
+            </h2>
+            <p className="text-gray-600">{profile.email}</p>
+          </div>
         </div>
+        <DropdownMenuDemo />
       </div>
 
       <div className="space-y-4">
