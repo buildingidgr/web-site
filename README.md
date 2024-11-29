@@ -15,6 +15,8 @@ To deploy this project to Railway, follow these steps:
 4. In the Railway dashboard, go to the "Variables" tab and add the following environment variables:
    - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`: Your Clerk publishable key
    - `CLERK_SECRET_KEY`: Your Clerk secret key
+   - `NEXT_PUBLIC_API_URL`: Your application server URL
+   - `NEXT_PUBLIC_URL`: Your frontend application URL
 
 5. Railway will automatically detect that this is a Next.js project and set up the build and start commands for you.
 

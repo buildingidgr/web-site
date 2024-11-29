@@ -24,8 +24,11 @@ export default function Profile() {
 
         const response = await fetch(`${API_URL}/api/profiles/me`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            'Authorization': `Bearer ${token}`,
+            'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_API_URL,
+            'Access-Control-Allow-Credentials': 'true'
           },
+          credentials: 'include'
         });
 
         if (!response.ok) {

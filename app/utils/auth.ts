@@ -10,12 +10,15 @@ export async function exchangeClerkSessionForTokens() {
     throw new Error('No active session');
   }
 
-  const response = await fetch('/api/auth/exchange', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/exchange`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
+      'Authorization': `Bearer ${token}`,
+      'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_API_URL,
+      'Access-Control-Allow-Credentials': 'true'
+    },
+    credentials: 'include'
   });
 
   if (!response.ok) {
