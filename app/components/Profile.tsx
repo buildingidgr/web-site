@@ -86,34 +86,32 @@ export default function ProfileComponent() {
 
   const handleUpdatePreferences = async (updatedPreferences: Partial<ProfilePreferences>) => {
     try {
-      let accessToken = tokenManager.getAccessToken();
-      
-      if (!accessToken) {
-        const clerkToken = await getToken();
-        if (!clerkToken) {
-          throw new Error('No Clerk token available');
-        }
-  
-        const tokens = await exchangeClerkSessionForTokens(
-          clerkToken,
-          session?.id,
-          user?.id
-        );
-        tokenManager.setTokens(tokens);
-        accessToken = tokens.access_token;
+      if (!session?.id || !user?.id) {
+        throw new Error('No active session');
       }
-  
+
+      const clerkToken = await getToken();
+      if (!clerkToken) {
+        throw new Error('No Clerk token available');
+      }
+
+      const apiTokens = await exchangeClerkSessionForTokens(
+        clerkToken,
+        session.id,
+        user.id
+      );
+
       const response = await fetch(`${PROFILE_API_URL}/api/profiles/me/preferences`, {
         method: 'PATCH',
         credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${apiTokens.access_token}`,
           'Content-Type': 'application/json',
           'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
         },
         body: JSON.stringify(updatedPreferences),
       });
-  
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Update preferences failed:', {
@@ -123,10 +121,23 @@ export default function ProfileComponent() {
         });
         throw new Error(`Failed to update preferences: ${errorText}`);
       }
-  
-      const updatedProfile = await response.json();
-      console.log('Preferences updated successfully:', updatedProfile);
-      setProfile(prev => prev ? { ...prev, preferences: updatedProfile } : null);
+
+      // After successful update, fetch the latest profile data
+      const profileResponse = await fetch(`${PROFILE_API_URL}/api/profiles/me`, {
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${apiTokens.access_token}`,
+          'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
+        }
+      });
+
+      if (!profileResponse.ok) {
+        throw new Error('Failed to fetch updated profile');
+      }
+
+      const updatedProfile = await profileResponse.json();
+      setProfile(updatedProfile);
+      console.log('Profile updated successfully:', updatedProfile);
     } catch (error) {
       console.error('Failed to update preferences:', error);
       throw error;
