@@ -18,7 +18,11 @@ export default function AuthHandler() {
             throw new Error('No Clerk token available');
           }
           
-          const tokens = await exchangeClerkSessionForTokens(clerkToken);
+          const tokens = await exchangeClerkSessionForTokens(
+            clerkToken,
+            session.id,
+            user.id
+          );
           console.log('Token exchange successful');
         } catch (error) {
           console.error('Token exchange failed:', error);

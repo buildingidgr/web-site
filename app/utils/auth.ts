@@ -2,7 +2,7 @@
 
 const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL;
 
-export async function exchangeClerkSessionForTokens(token: string) {
+export async function exchangeClerkSessionForTokens(token: string, sessionId?: string, userId?: string) {
     console.log('Auth: Starting token exchange');
     
     if (!AUTH_API_URL) {
@@ -23,8 +23,8 @@ export async function exchangeClerkSessionForTokens(token: string) {
         },
         body: JSON.stringify({
           token,
-          sessionId: window.Clerk?.session?.id,
-          userId: window.Clerk?.user?.id
+          sessionId,
+          userId
         })
       });
 
