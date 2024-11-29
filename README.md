@@ -17,6 +17,7 @@ To deploy this project to Railway, follow these steps:
    - `CLERK_SECRET_KEY`: Your Clerk secret key
    - `NEXT_PUBLIC_PROFILE_API_URL`: The public URL of your Profile service
    - `NEXT_PUBLIC_AUTH_API_URL`: The public URL of your Auth service
+   - `NEXT_PUBLIC_WEB_URL`: The public URL of this web application
 
 5. Railway will automatically detect that this is a Next.js project and set up the build and start commands for you.
 
