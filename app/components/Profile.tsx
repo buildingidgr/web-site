@@ -104,17 +104,18 @@ export default function Profile() {
           </div>
         </div>
         <div className="space-y-4">
-        <div>
-          <h3 className="font-semibold text-lg mb-2">Email Notifications</h3>
-          <div className="grid grid-cols-2 gap-2">
-            {Object.entries(profile.preferences.notifications.email).map(([key, value]) => (
-              <div key={key} className="flex items-center">
-                <span className="capitalize text-gray-600">
-                  {key.replace(/([A-Z])/g, ' $1').trim()}:
-                </span>
-                <span className="ml-2">{value ? 'Yes' : 'No'}</span>
-              </div>
-            ))}
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Email Notifications</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {Object.entries(profile.preferences.notifications.email).map(([key, value]) => (
+                <div key={key} className="flex items-center">
+                  <span className="capitalize text-gray-600">
+                    {key.replace(/([A-Z])/g, ' $1').trim()}:
+                  </span>
+                  <span className="ml-2">{value ? 'Yes' : 'No'}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
