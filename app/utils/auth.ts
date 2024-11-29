@@ -22,7 +22,9 @@ export async function exchangeClerkSessionForTokens(token: string) {
           'Origin': process.env.NEXT_PUBLIC_WEB_URL || '',
         },
         body: JSON.stringify({
-          token
+          token,
+          sessionId: window.Clerk?.session?.id,
+          userId: window.Clerk?.user?.id
         })
       });
 

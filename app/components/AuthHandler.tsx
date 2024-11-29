@@ -1,15 +1,17 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, useSession, useUser } from '@clerk/nextjs';
 import { useEffect } from 'react';
 import { exchangeClerkSessionForTokens } from '../utils/auth';
 
 export default function AuthHandler() {
   const { isSignedIn, getToken } = useAuth();
+  const { session } = useSession();
+  const { user } = useUser();
 
   useEffect(() => {
     async function handleTokenExchange() {
-      if (isSignedIn) {
+      if (isSignedIn && session && user) {
         try {
           const clerkToken = await getToken();
           if (!clerkToken) {
@@ -25,7 +27,7 @@ export default function AuthHandler() {
     }
 
     handleTokenExchange();
-  }, [isSignedIn, getToken]);
+  }, [isSignedIn, getToken, session, user]);
 
   return null;
 } 
