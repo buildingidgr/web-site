@@ -8,6 +8,7 @@ import { useSession } from '@clerk/nextjs';
 import { useUser } from '@clerk/nextjs';
 import ProfileDropdown from './ProfileDropdown';
 import PreferencesForm from './PreferencesForm';
+import { tokenManager } from '../utils/tokenManager';
 
 const PROFILE_API_URL = process.env.NEXT_PUBLIC_PROFILE_API_URL;
 
@@ -85,27 +86,29 @@ export default function ProfileComponent() {
 
   const handleUpdatePreferences = async (updatedPreferences: Partial<ProfilePreferences>) => {
     try {
-      const clerkToken = await getToken();
-      if (!clerkToken) {
-        throw new Error('No Clerk token available');
-      }
+      let accessToken = tokenManager.getAccessToken();
+      
+      if (!accessToken) {
+        // Token is missing or expired, get a new one
+        const clerkToken = await getToken();
+        if (!clerkToken) {
+          throw new Error('No Clerk token available');
+        }
 
-      console.log('Starting preferences update...');
-      const apiTokens = await exchangeClerkSessionForTokens(
-        clerkToken,
-        session?.id,
-        user?.id
-      );
-
-      if (!apiTokens?.access_token) {
-        throw new Error('No API token available');
+        const tokens = await exchangeClerkSessionForTokens(
+          clerkToken,
+          session?.id,
+          user?.id
+        );
+        tokenManager.setTokens(tokens);
+        accessToken = tokens.access_token;
       }
 
       const response = await fetch(`${PROFILE_API_URL}/api/profiles/me/preferences`, {
         method: 'PATCH',
         credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${apiTokens.access_token}`,
+          'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedPreferences),

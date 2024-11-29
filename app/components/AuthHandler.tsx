@@ -3,6 +3,7 @@
 import { useAuth, useSession, useUser } from '@clerk/nextjs';
 import { useEffect } from 'react';
 import { exchangeClerkSessionForTokens } from '../utils/auth';
+import { tokenManager } from '../utils/tokenManager';
 
 export default function AuthHandler() {
   const { isSignedIn, getToken } = useAuth();
@@ -13,19 +14,23 @@ export default function AuthHandler() {
     async function handleTokenExchange() {
       if (isSignedIn && isSessionLoaded && isUserLoaded && session && user) {
         try {
-          const clerkToken = await getToken();
-          if (!clerkToken) {
-            throw new Error('No Clerk token available');
+          // Only exchange if we don't have a valid token
+          if (!tokenManager.getAccessToken()) {
+            const clerkToken = await getToken();
+            if (!clerkToken) {
+              throw new Error('No Clerk token available');
+            }
+            
+            const tokens = await exchangeClerkSessionForTokens(
+              clerkToken,
+              session.id,
+              user.id
+            );
+            tokenManager.setTokens(tokens);
           }
-          
-          const tokens = await exchangeClerkSessionForTokens(
-            clerkToken,
-            session.id,
-            user.id
-          );
-          console.log('Token exchange successful');
         } catch (error) {
           console.error('Token exchange failed:', error);
+          tokenManager.clear();
         }
       }
     }
