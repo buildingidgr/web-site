@@ -4,6 +4,8 @@ import { useAuth } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import { Profile } from '../types/profile';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function Profile() {
   const { getToken } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -20,7 +22,7 @@ export default function Profile() {
           return;
         }
 
-        const response = await fetch('/api/profiles/me', {
+        const response = await fetch(`${API_URL}/api/profiles/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
