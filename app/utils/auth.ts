@@ -10,9 +10,11 @@ export async function exchangeClerkSessionForTokens(token: string) {
       throw new Error('Auth service URL is not configured');
     }
   
-    console.log('Auth: Making exchange request to:', AUTH_API_URL);
+    const url = `${AUTH_API_URL}/v1/token/clerk/exchange`;
+    console.log('Auth: Making exchange request to:', url);
+    
     try {
-      const response = await fetch(`${AUTH_API_URL}/api/auth/exchange`, {
+      const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
         headers: {
