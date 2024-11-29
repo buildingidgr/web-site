@@ -14,8 +14,8 @@ export default function ProfileComponent() {
   console.log('ProfileComponent: API_URL:', PROFILE_API_URL);
 
   const { getToken } = useAuth();
-  const { session } = useSession();
-  const { user } = useUser();
+  const { session, isLoaded: isSessionLoaded } = useSession();
+  const { user, isLoaded: isUserLoaded } = useUser();
   const [profile, setProfile] = useState<ProfileType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,6 +31,16 @@ export default function ProfileComponent() {
     }
     
     async function fetchProfile() {
+      if (!isSessionLoaded || !isUserLoaded) {
+        return;
+      }
+
+      if (!session || !user) {
+        setError('No active session');
+        setLoading(false);
+        return;
+      }
+
       console.log('ProfileComponent: Starting fetchProfile');
       try {
         console.log('ProfileComponent: Getting Clerk token');
@@ -81,7 +91,7 @@ export default function ProfileComponent() {
     }
 
     fetchProfile();
-  }, []);
+  }, [getToken, session, user, isSessionLoaded, isUserLoaded]);
 
   if (loading) {
     return (
