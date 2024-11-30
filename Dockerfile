@@ -6,8 +6,8 @@ WORKDIR /app
 
 # Install dependencies
 FROM base AS dependencies
-COPY package.json package-lock.json* ./
-RUN npm ci
+COPY package.json ./
+RUN npm install
 
 # Build the application
 FROM base AS builder
