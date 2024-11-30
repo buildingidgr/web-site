@@ -21,8 +21,11 @@ FROM base AS runner
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Create public directory if it doesn't exist
+RUN mkdir -p /app/public
+
 # Copy necessary files
-COPY --from=builder /app/public ./public
+COPY --from=builder /app/public ./public || true
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
