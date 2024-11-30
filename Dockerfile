@@ -21,13 +21,13 @@ FROM base AS runner
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Create public directory if it doesn't exist
-RUN mkdir -p /app/public
+# Create necessary directories
+RUN mkdir -p /app/public /app/.next/static
 
 # Copy necessary files
-COPY --from=builder /app/public ./public || true
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public 2>/dev/null || true
 
 # Expose port
 EXPOSE 3000
