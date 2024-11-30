@@ -13,7 +13,18 @@ RUN npm install
 FROM base AS builder
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
-ENV NEXT_TELEMETRY_DISABLED 1
+
+# Set environment variables for build time
+ARG NEXT_PUBLIC_AUTH_API_URL
+ARG NEXT_PUBLIC_PROFILE_API_URL
+ARG NEXT_PUBLIC_WEB_URL
+ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_AUTH_API_URL=$NEXT_PUBLIC_AUTH_API_URL
+ENV NEXT_PUBLIC_PROFILE_API_URL=$NEXT_PUBLIC_PROFILE_API_URL
+ENV NEXT_PUBLIC_WEB_URL=$NEXT_PUBLIC_WEB_URL
+ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+ENV NEXT_TELEMETRY_DISABLED=1
+
 RUN npm run build
 
 # Production image
@@ -27,11 +38,7 @@ RUN mkdir -p /app/public /app/.next/static
 # Copy necessary files
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-# Try to copy public directory if it exists
-RUN mkdir -p /app/public && \
-    if [ -d "/app/public" ]; then \
-      cp -r /app/public/* /app/public/ || true; \
-    fi
+COPY --from=builder /app/public ./public 2>/dev/null || :
 
 # Expose port
 EXPOSE 3000

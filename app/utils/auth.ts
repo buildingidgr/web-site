@@ -4,10 +4,14 @@ const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL;
 
 export async function exchangeClerkSessionForTokens(token: string, sessionId?: string, userId?: string) {
     console.log('Auth: Starting token exchange');
+    console.log('Auth: Environment variables:', {
+      AUTH_API_URL: process.env.NEXT_PUBLIC_AUTH_API_URL,
+      WEB_URL: process.env.NEXT_PUBLIC_WEB_URL,
+    });
     
-    if (!AUTH_API_URL) {
-      console.error('Auth: AUTH_API_URL is not configured');
-      throw new Error('Auth service URL is not configured');
+    if (!process.env.NEXT_PUBLIC_AUTH_API_URL) {
+      console.error('Auth: AUTH_API_URL is not configured. Please check your environment variables.');
+      throw new Error('Auth service URL is not configured. Please check your environment variables.');
     }
   
     if (!sessionId || !userId) {
