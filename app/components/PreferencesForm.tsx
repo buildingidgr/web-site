@@ -20,12 +20,22 @@ export default function PreferencesForm({ preferences, onUpdate }: PreferencesFo
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const changedPreferences = Object.keys(formData).reduce((acc, key) => {
-        if (JSON.stringify(formData[key]) !== JSON.stringify(preferences[key])) {
-          acc[key] = formData[key];
-        }
-        return acc;
-      }, {} as Partial<ProfilePreferences>);
+      const changedPreferences: Partial<ProfilePreferences> = {};
+      
+      // Compare dashboard settings
+      if (JSON.stringify(formData.dashboard) !== JSON.stringify(preferences.dashboard)) {
+        changedPreferences.dashboard = formData.dashboard;
+      }
+      
+      // Compare notifications
+      if (JSON.stringify(formData.notifications) !== JSON.stringify(preferences.notifications)) {
+        changedPreferences.notifications = formData.notifications;
+      }
+      
+      // Compare display settings
+      if (JSON.stringify(formData.display) !== JSON.stringify(preferences.display)) {
+        changedPreferences.display = formData.display;
+      }
 
       console.log('Sending preferences update:', changedPreferences);
       await onUpdate(changedPreferences);
@@ -135,12 +145,19 @@ export default function PreferencesForm({ preferences, onUpdate }: PreferencesFo
         </LoadingButton>
         <LoadingButton
           onClick={async () => {
-            const changedPreferences = Object.keys(formData).reduce((acc, key) => {
-              if (JSON.stringify(formData[key]) !== JSON.stringify(preferences[key])) {
-                acc[key] = formData[key];
-              }
-              return acc;
-            }, {} as Partial<ProfilePreferences>);
+            const changedPreferences: Partial<ProfilePreferences> = {};
+            
+            if (JSON.stringify(formData.dashboard) !== JSON.stringify(preferences.dashboard)) {
+              changedPreferences.dashboard = formData.dashboard;
+            }
+            
+            if (JSON.stringify(formData.notifications) !== JSON.stringify(preferences.notifications)) {
+              changedPreferences.notifications = formData.notifications;
+            }
+            
+            if (JSON.stringify(formData.display) !== JSON.stringify(preferences.display)) {
+              changedPreferences.display = formData.display;
+            }
 
             await onUpdate(changedPreferences);
             setIsEditing(false);
