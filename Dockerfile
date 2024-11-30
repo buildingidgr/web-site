@@ -38,7 +38,7 @@ RUN mkdir -p /app/public /app/.next/static
 # Copy necessary files
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public 2>/dev/null || :
+COPY --from=builder /app/public/. ./public/
 
 # Expose port
 EXPOSE 3000
