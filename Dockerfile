@@ -27,7 +27,11 @@ RUN mkdir -p /app/public /app/.next/static
 # Copy necessary files
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public 2>/dev/null || true
+# Try to copy public directory if it exists
+RUN mkdir -p /app/public && \
+    if [ -d "/app/public" ]; then \
+      cp -r /app/public/* /app/public/ || true; \
+    fi
 
 # Expose port
 EXPOSE 3000
